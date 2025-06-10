@@ -1,3 +1,5 @@
+# Text-Analyzer
+
 ## Text Analysis & Relationship Detection Tool
 
 This project is a large-scale text analysis system designed to process, clean, and analyze
