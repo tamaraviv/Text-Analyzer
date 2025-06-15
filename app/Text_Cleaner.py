@@ -6,7 +6,7 @@ Classes:
     - CleanNames: Handles loading and cleaning of name data, including filtering unwanted names.
 """
 
-# Imports:
+# Import project files:
 from . import utils
 
 

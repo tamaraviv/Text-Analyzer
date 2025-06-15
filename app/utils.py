@@ -1,13 +1,18 @@
 """
+This module provides utility functions used across multiple tasks in the project.
 
+It includes helper methods for:
+- Reading and cleaning data from CSV and JSON files
+- Handling string and word processing operations
+- Reusable data structures (e.g., defaultdict configurations)
+- Other general-purpose operations used by the logic and task modules
 """
 
-# Imports:
+# Import python library:
 import csv
 import re
 import json
 from collections import defaultdict
-
 
 
 def open_csv_format_for_sentences(file_path: str) -> list[list[str]]:

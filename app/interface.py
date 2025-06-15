@@ -1,6 +1,12 @@
 """
 This module initializes and runs the user interface.
+
+It is responsible for:
+- Parsing command-line arguments
+- Invoking the appropriate task based on user input
+- Handling user-facing error messages and output formatting
 """
+
 
 # Import from python library:
 import argparse

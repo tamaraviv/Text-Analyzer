@@ -1,18 +1,24 @@
 """
-
 This module implements the core algorithms used throughout the project.
 
+It contains the main logic for each task, including:
+- Text processing and sequence generation
+- Search and graph operations
+- Name recognition and context analysis
+
+Each Task class (Task1 to Task9) imports and uses functions from this module as needed.
 """
 
 # Import python library:
 import json
 import argparse
 import sys
-import os
 from collections import defaultdict, deque
 
+# Import project files:
 from . import Text_Cleaner
 from . import utils
+from . import validation
 
 
 class CleanText:
@@ -23,7 +29,7 @@ class CleanText:
     def __init__(self, args: argparse.Namespace):
         self.sentence_list = None
         self.names_list = None
-        self.validate_args(args)
+        validation.validate_args_CleanText(args)
         self.filename_sentences = args.sentences
         self.filename_remove_names = args.remove_words
         self.filename_names = args.names
@@ -62,7 +68,7 @@ class CountingSequences:
 
     def __init__(self, args: argparse.Namespace):
         self.sentence_list = None
-        self.validate_args(args)
+        validation.validate_args_CountingSequences(args)
         self.n = args.maxk
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
@@ -77,49 +83,6 @@ class CountingSequences:
             clean_sentence_and_names = utils.task1_into_lists(self.filename_preprocessed)
             self.sentence_list = clean_sentence_and_names[0]
 
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 2
-        :param args:
-        :return:
-        """
-        if (args.qsek_query_path is not None or args.windowsize is not None or
-                args.threshold is not None or args.fixed_length is not None):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.maxk is None or not isinstance(args.maxk, int) or args.maxk < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.names is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if not os.path.isfile(args.sentences) or not os.path.isfile(args.remove_words):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.sentences.endswith(".csv") or not args.remove_words.endswith(".csv"):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.preprocessed.endswith(".json"):
-                print("invalid input")
-                sys.exit(1)
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def seq_dict(self, sentence_list: list[list[str]]) -> dict[str, int]:
         """
@@ -162,7 +125,7 @@ class CountingPersonMentions:
     def __init__(self, args: argparse.Namespace):
         self.names_list = None
         self.sentence_list = None
-        self.validate_args(args)
+        validation.validate_args_CountingPersonMentions(args)
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
         self.filename_names = args.names
@@ -179,53 +142,6 @@ class CountingPersonMentions:
             clean_sentence_and_names = utils.task1_into_lists(self.filename_preprocessed)
             self.sentence_list = clean_sentence_and_names[0]
             self.names_list = clean_sentence_and_names[1]
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 3
-        :param args:
-        :return:
-        """
-        if (args.maxk is not None or args.qsek_query_path is not None or args.windowsize
-                is not None or args.threshold is not None or args.fixed_length is not None):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.names is not None:
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not os.path.isfile(args.sentences) or not os.path.isfile(args.names)
-                    or not os.path.isfile(args.remove_words)):
-                print("invalid input")
-                sys.exit(1)
-
-            if (not args.sentences.endswith(".csv") or not args.names.endswith(".csv") or
-                    not args.remove_words.endswith(".csv")):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.remove_words is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.sentences is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.preprocessed.endswith(".json"):
-                print("invalid input")
-                sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def print_in_json(self, ):
         """
@@ -263,7 +179,7 @@ class SearchEngine:
 
     def __init__(self, args: argparse.Namespace):
         self.sentence_list = None
-        self.validate_args(args)
+        validation.validate_args_SearchEngine(args)
         self.kseq_keys = args.qsek_query_path
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
@@ -278,60 +194,6 @@ class SearchEngine:
         elif self.filename_preprocessed:
             clean_sentence_and_names = utils.task1_into_lists(self.filename_preprocessed)
             self.sentence_list = clean_sentence_and_names[0]
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 4
-        :param args:
-        :return:
-        """
-        if (args.maxk is not None or args.windowsize or args.threshold is not None
-                or args.fixed_length is not None):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is None and args.preprocessed is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.names is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if not args.qsek_query_path.endswith(".json") or args.qsek_query_path is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if not os.path.isfile(args.sentences) or not os.path.isfile(args.remove_words):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.sentences.endswith(".csv") or not args.remove_words.endswith(".csv"):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.preprocessed.endswith(".json"):
-                print("invalid input")
-
-                sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def open_json_file(self):
         """
@@ -403,7 +265,7 @@ class PersonContextAnalyzer:
         self.sentence_list = None
         self.names_list = None
         self.args = args
-        self.validate_args(args)
+        validation.validate_args_PersonContextAnalyzer(args)
         self.n = args.maxk
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
@@ -425,56 +287,6 @@ class PersonContextAnalyzer:
             clean_sentence_and_names = utils.task1_into_lists(self.filename_preprocessed)
             self.sentence_list = clean_sentence_and_names[0]
             self.names_list = clean_sentence_and_names[1]
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 5
-        :param args:
-        :return:
-        """
-        if args.windowsize is not None or args.threshold is not None or args.fixed_length is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.maxk is None or not isinstance(args.maxk, int) or args.maxk < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.names is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not os.path.isfile(args.sentences) or not os.path.isfile(args.remove_words)
-                    or not os.path.isfile(args.names)):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.sentences.endswith(".csv") or not args.remove_words.endswith(".csv"):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.preprocessed.endswith(".json"):
-                print("invalid input")
-                sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
-
 
     def get_sentences_with_search_names(self, names_santances_dict: dict[str, list[str]]) -> list[list[str]]:
         """
@@ -549,7 +361,7 @@ class PeopleDirectConnectionGraph:
     def __init__(self, args: argparse.Namespace) -> None:
         self.sentence_list = None
         self.names_list = None
-        self.validate_args(args)
+        validation.validate_args_DirectConnection(args)
         self.k = args.windowsize
         self.t = args.threshold
         self.filename_remove_names = args.remove_words
@@ -568,64 +380,6 @@ class PeopleDirectConnectionGraph:
             clean_sentence_and_names = utils.task1_into_lists(self.filename_preprocessed)
             self.sentence_list = clean_sentence_and_names[0]
             self.names_list = clean_sentence_and_names[1]
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 6
-        :param args:
-        :return:
-        """
-        if args.maxk is not None or args.qsek_query_path is not None or args.fixed_length is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.windowsize is None or not isinstance(args.windowsize, int) or args.windowsize < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.threshold is None or not isinstance(args.threshold, int) or args.threshold < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is None and args.preprocessed is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if (not os.path.isfile(args.sentences) or not os.path.isfile(args.names) or not os.path.isfile(
-                    args.remove_words)):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.names is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not args.sentences.endswith(".csv") or not args.names.endswith(".csv")
-                    or not args.remove_words.endswith(".csv")):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.preprocessed.endswith(".json"):
-                print("invalid input")
-                sys.exit(1)
-        else:
-            print("invalid input")
-            sys.exit(1)
-
 
     def check_names_in_sentence(self, sentences_list: list[list[str]], k: int) -> dict[tuple[str, str], int]:
         """
@@ -709,7 +463,7 @@ class IndirectConnection:
         self.names_list = None
         self.graph = None
         self.sentence_list = None
-        self.validate_args(args)
+        validation.validate_args_IndirectConnection(args)
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
         self.filename_names = args.names
@@ -735,89 +489,6 @@ class IndirectConnection:
 
         elif self.filename_preprocessed:
             self.sentence_list = self.filename_preprocessed
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 7
-        :param args:
-        :return:
-        """
-        if args.maxk is not None or args.qsek_query_path is not None or args.fixed_length is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.maximal_distance is None or not isinstance(args.maximal_distance, int) or args.maximal_distance < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.pairs is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if not args.pairs.endswith(".json"):
-            print("invalid input")
-            sys.exit(1)
-
-        if not os.path.isfile(args.pairs):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is None and args.preprocessed is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not os.path.isfile(args.sentences) or not os.path.isfile(args.names)
-                    or not os.path.isfile(args.remove_words)):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.windowsize is None or not isinstance(args.windowsize, int) or args.windowsize < 0:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.threshold is None or not isinstance(args.threshold, int) or args.threshold < 0:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.names is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not args.sentences.endswith(".csv") or not args.names.endswith(".csv")
-                    or not args.remove_words.endswith(".csv")):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if not os.path.isfile(args.preprocessed):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.windowsize is not None or args.threshold is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.sentences is not None or args.names is not None or args.remove_words is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.preprocessed is not None:
-                if not args.preprocessed.endswith(".json"):
-                    print("invalid input")
-                    sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def open_json_into_list_task6(self) -> list[list[str]]:
         """
@@ -979,7 +650,9 @@ class FixedLengthPathChecker:
 
 
     def __init__(self, args: argparse.Namespace):
-        self.validate_args(args)
+        self.sentence_list = None
+        self.names_list = None
+        validation.validate_args_FixedLengthPathChecker(args)
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
         self.filename_names = args.names
@@ -988,6 +661,7 @@ class FixedLengthPathChecker:
         self.connection_names_list = args.pairs
         self.args = args
         args.fixed_length = None
+        self.graph = None
         del self.args.pairs
         if self.filename_sentences:
             self.k = args.windowsize
@@ -1004,92 +678,6 @@ class FixedLengthPathChecker:
 
         elif self.filename_preprocessed:
             self.sentence_list = self.filename_preprocessed
-            self.graph = None
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 8
-        :param args:
-        :return:
-        """
-        if args.maxk is not None or args.qsek_query_path is not None or args.maximal_distance is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.fixed_length is None or not isinstance(args.fixed_length, int) or args.fixed_length < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if (not os.path.isfile(args.sentences) or not os.path.isfile(args.remove_words)
-                    or not os.path.isfile(args.names)):
-                print("invalid input")
-                sys.exit(1)
-
-        if args.pairs is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if not args.pairs.endswith(".json"):
-            print("invalid input")
-            sys.exit(1)
-
-        if not os.path.isfile(args.pairs):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is None and args.preprocessed is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.names is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.windowsize is None or not isinstance(args.windowsize, int) or args.windowsize < 0:
-                print("invalid input0")
-                sys.exit(1)
-
-            if args.threshold is None or not isinstance(args.threshold, int) or args.threshold < 0:
-                print("invalid input")
-                sys.exit(1)
-
-            if (not args.sentences.endswith(".csv") or not args.names.endswith(".csv")
-                    or not args.remove_words.endswith(".csv")):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if args.windowsize is not None or args.threshold is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.sentences is not None or args.names is not None or args.remove_words is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.preprocessed is not None:
-                if not os.path.isfile(args.preprocessed):
-                    print("invalid input")
-                    sys.exit(1)
-
-                if not args.preprocessed.endswith(".json"):
-                    print("invalid input")
-                    sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def open_json_into_list_task6(self) -> list[list[str]]:
         """
@@ -1232,12 +820,14 @@ class SentenceClustering:
     """
 
     def __init__(self, args: argparse.Namespace):
-        self.validate_args(args)
+        self.sentence_list = None
+        validation.validate_args_SentenceClustering(args)
         self.t = args.threshold
         self.filename_remove_names = args.remove_words
         self.filename_sentences = args.sentences
         self.filename_names = args.names
         self.filename_preprocessed = args.preprocessed
+        self.graph = None
 
     def run(self):
         if self.filename_sentences:
@@ -1249,64 +839,6 @@ class SentenceClustering:
             self.sentence_list = clean_sentence_and_names[0]
 
         self.graph = self.build_graph()
-
-    def validate_args(self, args: argparse.Namespace) -> None:
-        """
-        this func validates arguments for task 9
-        :param args:
-        :return:
-        """
-        if (args.maxk is not None or args.qsek_query_path is not None or args.fixed_length is not None
-                or args.maximal_distance is not None or args.pairs is not None or args.windowsize is not None):
-            print("invalid input")
-            sys.exit(1)
-
-        if args.threshold is None or not isinstance(args.threshold, int) or args.threshold < 0:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.names is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None and args.preprocessed is not None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is None and args.preprocessed is None:
-            print("invalid input")
-            sys.exit(1)
-
-        if args.sentences is not None:
-            if not os.path.isfile(args.sentences) or not os.path.isfile(args.remove_words):
-                print("invalid input")
-                sys.exit(1)
-
-            if args.remove_words is None:
-                print("invalid input")
-                sys.exit(1)
-
-            if not args.sentences.endswith(".csv") or not args.remove_words.endswith(".csv"):
-                print("invalid input")
-                sys.exit(1)
-
-        elif args.preprocessed is not None:
-            if args.sentences is not None or args.remove_words is not None:
-                print("invalid input")
-                sys.exit(1)
-
-            if args.preprocessed is not None:
-                if not os.path.isfile(args.preprocessed):
-                    print("invalid input")
-                    sys.exit(1)
-
-                if not args.preprocessed.endswith(".json"):
-                    print("invalid input")
-                    sys.exit(1)
-
-        else:
-            print("invalid input")
-            sys.exit(1)
 
     def build_graph(self) -> dict[int, list[int]]:
         """
@@ -1338,13 +870,13 @@ class SentenceClustering:
         visited = set()
         groups: list[list[str]] = []
 
-        def dfs(node: str, group: list[str]) -> None:
+        def dfs(node_g: str, group_g: list[str]) -> None:
             """Performs Depth-First Search to find all connected components."""
-            visited.add(node)
-            group.append(node)
-            for neighbor in self.graph.get(node, []):
+            visited.add(node_g)
+            group_g.append(node_g)
+            for neighbor in self.graph.get(node_g, []):
                 if neighbor not in visited:
-                    dfs(neighbor, group)
+                    dfs(neighbor, group_g)
 
         for node in range(len(self.sentence_list)):
             if node not in visited:
