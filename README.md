@@ -36,13 +36,13 @@ preserving task-specific logic.
 
 ---
 
-## 🔧 Core Components
+## Core Components
 
-### 🧹 Cleaning Module (`Text_Cleaner.py`)
+### Cleaning Module (`Text_Cleaner.py`)
 - Removes punctuation, extra whitespace, and filtered words from input data.
   - Used across multiple tasks for consistent preprocessing.
 
-### 🧪 Task Classes (`logic.py`)
+### Task Classes (`logic.py`)
 Each task is implemented in its own class and follows a unified structure:
 - `run(self)`: Determines the type of input (CSV or JSON) and triggers the appropriate process.
   - `validate_args(self, args)`: Ensures input parameters are valid (e.g., file paths, types, and
@@ -50,7 +50,7 @@ Each task is implemented in its own class and follows a unified structure:
   - `print_in_json(self)`: Outputs structured results in JSON format.
   - Task-specific logic is implemented inside the class, allowing for clean encapsulation.
 
-### 🧰 Interface Module (`interface.py`)
+### Interface Module (`interface.py`)
 Handles command-line argument parsing using `argparse`, including custom error handling for
 invalid input.
 
@@ -66,8 +66,7 @@ invalid input.
 
 
 ## How To Run
-- Use the command line to run the project by executing the main script with the appropriate
-- task number and required arguments.
+- Use the command line to run the project by executing the main script with the appropriate task number and required arguments.
 
 ```bash
 python main.py -t <task_number> [additional arguments]
