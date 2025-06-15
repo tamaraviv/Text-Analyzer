@@ -28,7 +28,7 @@ Text_analyzer/
 ```
 ---
 
-## 🧠 System Architecture
+## System Architecture
 
 The system is built using **object-oriented programming**, with each major task implemented
 as a self-contained class. The design allows for uniform handling of input/output while
