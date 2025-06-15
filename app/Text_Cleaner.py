@@ -7,7 +7,7 @@ Classes:
 """
 
 # Imports:
-import utiles
+from . import utils
 
 
 class CleanSentences:
@@ -32,16 +32,16 @@ class CleanSentences:
         Returns:
             list[list[str]]: A list of sentences, each represented as a list of words.
         """
-        sentences = utiles.open_csv_format_for_sentences(self.filename_sentences)
-        remove_names = utiles.open_csv_format_for_sentences(self.filename_remove_names)
+        sentences = utils.open_csv_format_for_sentences(self.filename_sentences)
+        remove_names = utils.open_csv_format_for_sentences(self.filename_remove_names)
 
         cleaned_sentences = []
         for sentence in sentences:
-            clean_sen = utiles.clean_string(sentence, remove_names)
+            clean_sen = utils.clean_string(sentence, remove_names)
             cleaned_sentences.append([clean_sen])
 
-        cleaned_sentences = utiles.remove_empty_sent(cleaned_sentences)
-        cleaned_sentences = utiles.turn_list_to_single_str(cleaned_sentences)
+        cleaned_sentences = utils.remove_empty_sent(cleaned_sentences)
+        cleaned_sentences = utils.turn_list_to_single_str(cleaned_sentences)
 
         return cleaned_sentences
 
@@ -50,15 +50,15 @@ class CleanSentences:
         this func generates clean sentences list without the remove words in the given list
         :return:
         """
-        sentences = utiles.open_csv_format_for_sentences(self.filename_sentences)
+        sentences = utils.open_csv_format_for_sentences(self.filename_sentences)
 
         cleaned_sentences = []
         for sentence in sentences:
-            clean_sen = utiles.clean_string_no_remove_words(sentence)
+            clean_sen = utils.clean_string_no_remove_words(sentence)
             cleaned_sentences.append([clean_sen])
 
-        cleaned_sentences = utiles.remove_empty_sent(cleaned_sentences)
-        cleaned_sentences = utiles.turn_list_to_single_str(cleaned_sentences)
+        cleaned_sentences = utils.remove_empty_sent(cleaned_sentences)
+        cleaned_sentences = utils.turn_list_to_single_str(cleaned_sentences)
 
         return cleaned_sentences
 
@@ -86,25 +86,25 @@ class CleanNames:
             list[list[list[str]]]: A cleaned list of names, where each element is a pair of lists:
                                    [cleaned_main_names, cleaned_other_names]
         """
-        names_list = utiles.open_csv_format_for_name(self.filename_names)
-        remove_names_list = utiles.open_csv_format_for_sentences(self.filename_remove_names)
+        names_list = utils.open_csv_format_for_name(self.filename_names)
+        remove_names_list = utils.open_csv_format_for_sentences(self.filename_remove_names)
         clean_list = []
         for sublist in names_list:
             cleaned_names = []
             cleaned_other_names = []
 
             for word in sublist[0]:
-                new_str = utiles.clean_string(word, remove_names_list)
+                new_str = utils.clean_string(word, remove_names_list)
                 cleaned_names.append(new_str)
 
             for word in sublist[1]:
-                new_str = utiles.clean_string(word, remove_names_list)
+                new_str = utils.clean_string(word, remove_names_list)
                 cleaned_other_names.append(new_str)
 
             clean_list.append([cleaned_names, cleaned_other_names])
 
-        clean_list = utiles.remove_duplicate_words(clean_list)
-        clean_list = utiles.replace_empty_lists_for_names(clean_list)
+        clean_list = utils.remove_duplicate_words(clean_list)
+        clean_list = utils.replace_empty_lists_for_names(clean_list)
 
         for sublist in clean_list:
             if sublist[1] != ['']:
@@ -112,15 +112,15 @@ class CleanNames:
                 sublist[1] = new_other_name
 
         for sublist in clean_list:
-            sublist[1] = utiles.turn_list_to_single_str(sublist[1])
+            sublist[1] = utils.turn_list_to_single_str(sublist[1])
         final_list = []
 
         for sublist in clean_list:
-            if utiles.remove_empty_names(sublist):
+            if utils.remove_empty_names(sublist):
                 final_list.append(sublist)
 
         for sublist in final_list:
-            sublist[0] = utiles.remove_empty_str_from_list(sublist[0])
-            sublist[1] = utiles.remove_empty_str_from_list(sublist[1])
+            sublist[0] = utils.remove_empty_str_from_list(sublist[0])
+            sublist[1] = utils.remove_empty_str_from_list(sublist[1])
 
         return final_list

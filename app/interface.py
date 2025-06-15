@@ -6,9 +6,9 @@ This module initializes and runs the user interface.
 import argparse
 import sys
 
+
 # import project files:
-import logic
-from add_to_git.Text_analyzer.logic import CleanText
+from . import logic
 
 
 def user_interface():
@@ -46,5 +46,30 @@ def user_interface():
     if args.task == 1:
         task = logic.CleanText(args)
 
+    if args.task == 2:
+        task = logic.CountingSequences(args)
+
+    if args.task == 3:
+        task = logic.CountingPersonMentions(args)
+
+    if args.task == 4:
+        task = logic.SearchEngine(args)
+
+    if args.task == 5:
+        task = logic.PersonContextAnalyzer(args)
+
+    if args.task == 6:
+        task = logic.PeopleDirectConnectionGraph(args)
+
+    if args.task == 7:
+        task = logic.IndirectConnection(args)
+
+    if args.task == 8:
+        task = logic.FixedLengthPathChecker(args)
+
+    if args.task == 9:
+        task = logic.SentenceClustering(args)
+
     return task
+
 

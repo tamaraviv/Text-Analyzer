@@ -3,7 +3,7 @@ Main script to run the project.
 """
 
 # Import:
-import interface
+from app import interface
 
 
 def main():
