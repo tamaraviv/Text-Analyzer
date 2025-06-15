@@ -12,7 +12,7 @@ and maintain.
 ---
 
 ## Project Structure
-
+```
 Text_analyzer/
 ├── app/
 │   ├── __init__.py             # Module initializer
@@ -25,7 +25,7 @@ Text_analyzer/
 ├── README.md                   # Project documentation
 ├── requirements.txt            # Python dependencies
 └── test.py                     # Tests and manual validation
-
+```
 ---
 
 ## 🧠 System Architecture
