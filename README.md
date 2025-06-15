@@ -64,6 +64,7 @@ invalid input.
   - Detecting both **direct and indirect relationships** between individuals
   - Extracting **contexts** in which individuals and relations appear
 
+---
 
 ## How To Run
 - Use the command line to run the project by executing the main script with the appropriate task number and required arguments.
@@ -84,6 +85,10 @@ python main.py -t <task_number> [additional arguments]
   | 9      | Group sentences by shared words    | `-s`, `-r`, `--threshold`                                  |
   - If any required argument is missing or incompatible with the selected task, the program will print an error message
 
+```
 
+---
 
+## Tests
+The `test.py` script provides testing functionality to verify the correctness of the main components. It can be used for both manual validation and automated checks.
 
